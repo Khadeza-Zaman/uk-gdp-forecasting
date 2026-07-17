@@ -37,3 +37,23 @@
 - ARIMA(1,0,1): RMSE=5.263, MAE=2.129
 - Essentially a tie — both forecasts stay flat and miss the COVID swing 
   entirely, so the RMSE gap between them is noise relative to the shock size
+
+## Rolling one-quarter-ahead evaluation
+- Rolling Naive: RMSE=8.630, MAE=3.504
+- Rolling ARIMA: RMSE=9.492, MAE=3.695
+- Unlike CPIH, rolling evaluation performed worse than the static test for 
+  both models — the opposite pattern from the inflation project
+- Mechanism: GDP's 2020 shock was V-shaped (sharp crash, sharp bounce-back), 
+  not a gradual climb. Naive's forecast whips between copying the crash 
+  forward (predicting the bounce-back quarter would also crash) and then 
+  copying the bounce-back forward (predicting continued high growth as 
+  reality normalized) - wrong in both directions at the turning point
+- ARIMA's AR(1) term extrapolates momentum, which made it dip even further 
+  than naive at the worst point (-26% vs naive's -20%) - the model's 
+  attempt to capture real momentum backfired specifically at a sharp 
+  reversal, where "the trend continues" is the worst possible assumption
+- Conclusion: rolling short-horizon evaluation is not universally better 
+  than static long-horizon evaluation - it depends on the shape of the 
+  shock. Gradual shifts (CPIH 2022) favor rolling; V-shaped shocks (GDP 
+  2020) can make rolling forecasts worse, since persistence-style models 
+  are specifically bad at turning points
